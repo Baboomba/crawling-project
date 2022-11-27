@@ -3,7 +3,7 @@
 import pandas as pd
 
 def storeList(raw_num, col_num):
-    wb = pd.read_excel(r'C:\Users\SEC\Coding\VScode\crawling\common\store_list.xls')
+    wb = pd.read_excel(r'.\crawling\common\store_list.xls')
     df_storelist = pd.DataFrame(wb)
     df_storelist.fillna("", inplace=True)
     df_storelist.set_index('store')
@@ -12,7 +12,7 @@ def storeList(raw_num, col_num):
 
 
 def storeSize():
-    wb = pd.read_excel(r'C:\Users\SEC\Coding\VScode\crawling\common\store_list.xls')
+    wb = pd.read_excel(r'.\crawling\common\store_list.xls')
     df_storelist = pd.DataFrame(wb)
     size = df_storelist.shape[0]
     return size

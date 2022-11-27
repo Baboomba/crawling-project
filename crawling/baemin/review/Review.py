@@ -22,8 +22,8 @@ def selectStore(driver):
     ran_num = round(random.random(), 2)
     
     WebDriverWait(driver, 5).until(
-        EC.presence_of_element_located(
-            (By.XPATH, '//*[@id="root"]/div/div[3]/div[2]/div[1]/div[1]/div/select')
+        EC.element_to_be_clickable(
+            (By.XPATH, '//*[@id="root"]/div/div[3]/div[2]/div[1]/div[1]/div')
         )
     )      # select store / just wait. don't click it.
     
@@ -114,7 +114,7 @@ def scrollDown(driver, seconds):
 
 
 
-def scrapeReview(driver, store_index, star):
+def scrapeReview(driver, store_index):
     ran_num = round(random.random(), 2)
     html = driver.page_source
     soup = BeautifulSoup(html, "html.parser")
@@ -133,7 +133,7 @@ def scrapeReview(driver, store_index, star):
         
         written_day = soup.select_one('#review-page > div.review-wrap > div > div:nth-child({}) > div.user-info > div.rating-stars-wrap > span'.format(cards))
         
-        if rate > star or written_day != '어제':
+        if rate > 5 or written_day.text != '어제':
             continue
         
         nick = soup.select_one('#review-page > div.review-wrap > div > div:nth-child({}) > div.user-info > div.rating-stars-wrap > p'.format(cards))
@@ -156,7 +156,7 @@ def scrapeReview(driver, store_index, star):
                     )
                 ).value_of_css_property("background-image")
             img_url = img[5:-2]
-            urllib.request.urlretrieve(img_url, r'C:\Users\SEC\Coding\VScode\crawling\download\baemin_img\{}_{}.jpg'.format(store_index, cards))
+            urllib.request.urlretrieve(img_url, r'.\crawling\download\baemin_img\{}_{}.jpg'.format(store_index, cards))
             img_no = '{}_{}'.format(store_index, cards)
             
         except TimeoutException or NoSuchElementException:

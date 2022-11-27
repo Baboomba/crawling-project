@@ -9,7 +9,7 @@ import time
 import random
 
 import sys
-sys.path.append(r'C:\Users\SEC\Coding\VScode\crawling')
+sys.path.append(r'.\crawling')
 
 
 

@@ -9,11 +9,10 @@ sys.path.append(r'.\crawling')
 
 from common.DriverSet import driver_chrome
 from common.Log_info import LogInfo, storeSize
-from common.Save import dataDir, processData, saveSales, saveReview
+from common.Save import dataDir, saveSales
 from LogBM import logIn, bridgePath, closeWindows
 from path import findPath
 from sale.getSale import scrapeSales
-from review.Review import selectStore, scrapeReview
 from Exception import errorProcess
 
 
@@ -33,7 +32,6 @@ def scrapeBM(headless:bool):
                     logIn(driver, log_info, store_index)       # log in sucess or failure
                     WebDriverWait(driver, 2).until_not(EC.url_contains('login'))
                 except TimeoutException:
-                    df_result = None
                     df_result = errorProcess(store_index, log_info, kind='sale')
                     df_sales = saveSales(store_index, df_result, app='baemin', kind='sale')
                     driver.get(URL)
@@ -41,22 +39,8 @@ def scrapeBM(headless:bool):
                     
                 bridgePath(driver)
                 findPath(driver, path='order')  # scrape sales data
-                df_result = None
                 df_result = scrapeSales(driver, log_info, store_index)
                 df_sales = saveSales(store_index, df_result, app='baemin', kind='sale')
-                
-                try:
-                    findPath(driver, path='review')   # scrape reveiw data
-                    selectStore(driver)
-                    df_result = None
-                    df_result = scrapeReview(driver, store_index)
-                    df_review = saveReview(store_index, df_result, app='baemin', kind='review')
-                except:
-                    df_result = None
-                    df_result = errorProcess(store_index, log_info, kind='review')
-                    df_review = saveReview(store_index, df_result, app='baemin', kind='review')
-                    driver.get(URL)
-                    continue
                 
                 closeWindows(driver)
             else:
@@ -68,19 +52,15 @@ def scrapeBM(headless:bool):
             df_result = None
             df_result = errorProcess(store_index, log_info, kind='sale')
             df_sales = saveSales(store_index, df_result, app='baemin', kind='sale')
-            df_result = None
-            df_result = errorProcess(store_index, log_info, kind='review')
-            df_review = saveReview(store_index, df_result, app='baemin', kind='review')
             closeWindows(driver)
         
     df_sales.set_index('No.', drop=True, inplace=True)
     df_sales.fillna("", inplace=True)
     df_sales.to_excel(data_dir)
-    processData(app='baemin', kind='review')
     driver.quit()
 
 
 
 if __name__ == '__main__':
-    scrapeBM(headless=False)
+    scrapeBM(headless=True)
     print('complete')

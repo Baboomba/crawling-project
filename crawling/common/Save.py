@@ -13,7 +13,7 @@ from openpyxl.styles import Alignment
 def dataDir(app, kind):
     yesterday = datetime.datetime.today() - datetime.timedelta(days=1)
     day = yesterday.strftime('%Y%m%d')
-    data_dir = r'C:\Users\SEC\Coding\VScode\crawling\result\{}_{}_{}.xlsx'.format(app, kind, day)
+    data_dir = r'.\crawling\result\{}_{}_{}.xlsx'.format(app, kind, day)
     return data_dir
 
 
@@ -27,9 +27,9 @@ def saveSales(store_index, df_result, app, kind):
             ['', '', 'sales', 'quantity', 'sales', 'quantity', 'sales', 'quantity']
             ]
         df_sales = pd.DataFrame(index=range(0, 1), columns=columns)
-            
-        df_sales = pd.concat([df_sales, df_result])
-        df_sales.to_excel(data_dir)
+        
+    df_sales = pd.concat([df_sales, df_result])
+    df_sales.to_excel(data_dir)
     
     return df_sales
 
@@ -77,13 +77,13 @@ def processData(app, kind):
     for image_rows in range(2, ws.max_row + 1):
         img_no = ws[image_rows][6].value
         try:
-            review_img = Image(r'C:\Users\SEC\Coding\VScode\crawling\download\baemin_img\{}.jpg'.format(img_no))
+            review_img = Image(r'.\crawling\download\baemin_img\{}.jpg'.format(img_no))
             review_img.height = 200
             review_img.width = 200
             ws.add_image(review_img, 'H{}'.format(image_rows))
         except:
             continue
 
-    wb.save(r'C:\Users\SEC\Coding\VScode\crawling\result\{}_{}_{}.xlsx'.format(app, kind, day))
+    wb.save(r'.\crawling\result\{}_{}_{}.xlsx'.format(app, kind, day))
     
     return print('complete')

@@ -9,12 +9,12 @@ import random
 import pandas as pd
 
 import sys
-sys.path.append(r'C:\Users\SEC\Coding\VScode\crawling')
+sys.path.append(r'.\crawling')
 
 
 
 ### basic data ###
-wb = pd.read_excel(r'C:\Users\SEC\Coding\VScode\crawling\common\store_list.xls')
+wb = pd.read_excel(r'.\crawling\common\store_list.xls')
 df_storelist = pd.DataFrame(wb)
 df_storelist.fillna("", inplace=True)
 df_storelist.set_index('store')
@@ -82,16 +82,27 @@ def closeWindows(driver):
             driver.close()                                        # close all of new-taps
 
         driver.switch_to.window(driver.window_handles[0])
-        ran_num = round(random.random(), 2)
+       
+        try:
+            time.sleep(ran_num + 1)
+            WebDriverWait(driver, 1).until(EC.element_to_be_clickable((By.XPATH, pop_up))).click()        # wait for popup
+        except:
+            pass
+        
+        time.sleep(ran_num + 0.5)        
+        driver.find_element(By.XPATH, '//*[@id="root"]/div[1]/div[1]/div/div[1]/div/div[2]/span[4]/a').click()  # log out
+        time.sleep(ran_num + 0.5)
+    
+    else:
+        driver.get(r'https://ceo.baemin.com/')
+        driver.page_source
         
         try:
             time.sleep(ran_num + 0.3)
             WebDriverWait(driver, 3).until(EC.element_to_be_clickable((By.XPATH, pop_up))).click()        # wait for popup
         except:
             pass
-                
-        driver.find_element(By.XPATH, '//*[@id="root"]/div[1]/div[1]/div/div[1]/div/div[2]/span[4]/a').click()  # log out
+        
         time.sleep(ran_num + 0.5)
-    
-    else:
+        driver.find_element(By.XPATH, '//*[@id="root"]/div[1]/div[1]/div/div[1]/div/div[2]/span[4]/a').click()  # log out
         time.sleep(ran_num + 0.5)

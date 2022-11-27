@@ -17,7 +17,7 @@ def scrapeSales(driver, log_info, store_index):
     webdriver.ActionChains(driver).key_down(Keys.PAGE_UP).perform()
     time.sleep(ran_num + 0.5)
     webdriver.ActionChains(driver).key_down(Keys.PAGE_UP).perform()
-        
+       
     WebDriverWait(driver, 5).until(
         EC.presence_of_element_located(
             (By.XPATH, '//*[@id="root"]/div/div[3]/div[2]/div[1]/div/div[1]/button[1]/div/p[2]')
@@ -35,9 +35,11 @@ def scrapeSales(driver, log_info, store_index):
     time.sleep(ran_num + 1)
     webdriver.ActionChains(driver).key_down(Keys.PAGE_UP).perform()
     time.sleep(ran_num + 0.5)
-    sale = driver.find_element(By.XPATH, '//*[@id="root"]/div/div[3]/div[2]/div[1]/div/div[2]/div[2]/span[2]/b').text # scrape sale
-    qt = driver.find_element(By.XPATH, '//*[@id="root"]/div/div[3]/div[2]/div[1]/div/div[2]/div[1]/span[2]/b').text  # scrape quantity
-    
+    sale_str = driver.find_element(By.XPATH, '//*[@id="root"]/div/div[3]/div[2]/div[1]/div/div[2]/div[2]/span[2]/b').text # scrape sale
+    sale = int(sale_str.replace(',', ''))
+    qt_str = driver.find_element(By.XPATH, '//*[@id="root"]/div/div[3]/div[2]/div[1]/div/div[2]/div[1]/span[2]/b').text  # scrape quantity
+    qt = int(qt_str.replace(',', ''))
+        
     store_name = log_info.getStore(store_index)
     empty = []
     empty.append([store_index, store_name, sale, qt])
