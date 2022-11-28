@@ -20,6 +20,19 @@ def storeSize():
     
 
 class LogInfo:
+    def __init__(self, app):
+        self.columns = [['No.','store', app, app, ], ['', '', 'sales', 'quantity']]
+        self.frame_sales = pd.DataFrame(
+            index=range(0, 1),
+            columns= [
+                ['No.', 'store', 'baemin', 'baemin', 'yogiyo', 'yogiyo', 'coupang', 'coupang'],
+                ['', '', 'sales', 'quantity', 'sales', 'quantity', 'sales', 'quantity']
+            ])
+        self.frame_review = pd.DataFrame(
+            index=range(0, 1),
+            columns= ['store', 'nick', 'rate', 'view', 'img url', 'img_no', 'img']
+        )
+
            
     def getStore(self, i):
         store = storeList(i, 1)

@@ -12,6 +12,7 @@ import time
 ### My modules ###
 from common.Log_info import LogInfo
 
+import pandas as pd
 
 class LogProcess(LogInfo):
     
@@ -19,6 +20,11 @@ class LogProcess(LogInfo):
         self.url_new = r'https://ceo.yogiyo.co.kr/login?by_dowant=1'
         self.url_old = r'https://owner.yogiyo.co.kr/owner/login/'
         self.url_sucess = r'https://owner.yogiyo.co.kr/owner/?login=1'
+        self.frame = pd.DataFrame(
+            index=range(0, 1),
+            columns= ['No.', 'store', 'sales', 'qt']
+        )
+        
                 
     def log_new(self, driver, store_index):
         ran_num = round(random.random())
@@ -52,10 +58,20 @@ class LogProcess(LogInfo):
         time.sleep(ran_num + 0.3)
         driver.find_element(By.XPATH, '//*[@id="login"]/form/fieldset/div[4]/button').click()
         time.sleep(ran_num)
+        
+        
+    def make_frame(self, store_index):
+        empty = []
+        store = self.getStore(store_index)
+        error = [store_index, store, '', '']
+        empty.append(error)
+        y_result = pd.DataFrame(empty, columns= ['No.', 'store', 'sales', 'qt'])
+        return y_result
 
 
-    def log_check(self, driver, store_index):
+    def log_check(self, driver, store_index, make_frame):
         if driver.current_url == self.url_sucess:
             pass
         else:
-            print(f'{store_index}th store log error')
+            y_result = make_frame(self, store_index)
+            return y_result
