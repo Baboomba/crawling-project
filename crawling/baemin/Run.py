@@ -10,11 +10,11 @@ sys.path.append(r'.\crawling')
 from common.DriverSet import driver_chrome
 from common.Log_info import LogInfo, storeSize
 from common.Save import dataDir, processData, saveSales, saveReview
-from LogBM import logIn, bridgePath, closeWindows
-from path import findPath
-from sale.getSale import scrapeSales
-from review.Review import selectStore, scrapeReview
-from Exception import errorProcess
+from baemin.LogBM import logIn, bridgePath, closeWindows
+from baemin.path import findPath
+from baemin.sale.getSale import scrapeSales
+from baemin.review.Review import selectStore, scrapeReview
+from baemin.Exception import errorProcess
 
 
 def scrapeBM(headless:bool):

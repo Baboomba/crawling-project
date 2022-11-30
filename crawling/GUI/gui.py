@@ -13,19 +13,35 @@ from PyQt5 import uic
 # button.show()
 
 
-form_class = uic.loadUiType('design.ui')[0]  # An object to connect UI file with python file
+form_class = uic.loadUiType("design.ui")[0]  # An object to connect UI file with python file
 
 
 class MyWindow(QMainWindow, form_class):
     
     def __init__(self):
-        super().__init__()
+        super().__init__(self)
         self.setupUi(self)
-        self.setGeometry(400, 250, 900, 550)
+        self.setGeometry(800, 250, 250, 350)
         self.setWindowTitle("Frankraft")
         self.setWindowIcon(QIcon(r'C:\Users\SEC\Coding\VScode\crawling\GUI\img\bike_red.png'))
     
-        #self.comboBox.currentTextChanged.connect(self.showTable)
+    def menubar(self):
+        menu_open = self.menuBar().addMenu("&File")
+        
+        exit_action = QAction(QMenuBar(self))
+        exit_action.triggered.connect(self.click)
+    
+    def click(self):
+        print('sucess')
+        
+
+    
+    
+    
+
+
+    
+    #self.comboBox.currentTextChanged.connect(self.showTable)
     
     
     
@@ -47,26 +63,11 @@ class MyWindow(QMainWindow, form_class):
     #     return self.progressBar.setValue(store_index)
     
         
-        def setDate(self):
-            return print(self.dateStart.date())
-        
-        self.dateStart.dateChanged.connect(setDate)
 
+def gui_main():
+    app = QApplication(sys.argv)
+    window = MyWindow()
+    window.show()
+    app.exec_()
 
-
-
-
-
-
-app = QApplication(sys.argv)
-window = MyWindow()
-window.show()
-app.exec_()
-
-
-        
-
-# if __name__ == '__main__':
-#     app = QApplication(sys.argv)
-#     window = MyApp()
-#     sys.exit(app.exec_())
+gui_main()

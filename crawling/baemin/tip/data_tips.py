@@ -15,7 +15,7 @@ from bs4 import BeautifulSoup
 import sys
 sys.path.append(r'C:\\Users\\SEC\\Coding\\VScode\\crawling')
 
-from Log_info import log_info
+from common.Log_info import LogInfo
 
 import time
 
@@ -25,6 +25,8 @@ import openpyxl
 option = webdriver.ChromeOptions()
 option.add_argument('headless')
 
+
+url_request = 'https://self.baemin.com/v1/settle/history/details?page=0&size=10&startDate=2022-10-01&endDate=2022-10-31'
 
 
 # 
@@ -47,7 +49,7 @@ driver = webdriver.Chrome(executable_path=r'C:\Users\SEC\chromedriver')
 # log in
 
 wb = pd.read_excel(r'C:\Users\SEC\Coding\VScode\crawling\store_list.xls')
-login = log_info()
+login = LogInfo()
 shape_df = wb.shape[0]
 error_list = []
 

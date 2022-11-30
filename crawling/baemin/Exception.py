@@ -3,7 +3,7 @@ from common.Log_info import LogInfo
 
 ### Exception ###
 def errorProcess(store_index, log_info, kind):
-    log_info = LogInfo()
+    log_info = LogInfo(app='baemin')
     store_name = log_info.getStore(store_index)
     empty = []
     

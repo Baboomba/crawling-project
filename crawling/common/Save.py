@@ -11,7 +11,7 @@ from common.Log_info import LogInfo
 
 class SaveData(LogInfo):
     def __init__(self, app, kind):
-        super.__init__(self, app)
+        super().__init__(app)
         yesterday = datetime.datetime.today() - datetime.timedelta(days=1)
         day = yesterday.strftime('%Y%m%d')
         self.data_dir = r'.\crawling\result\{}_{}_{}.xlsx'.format(app, kind, day)
@@ -70,7 +70,11 @@ class SaveData(LogInfo):
         
         wb.save(self.data_dir)
 
-        
+
+    def set_index(self):
+        df_sales.set_index('No.', drop=True, inplace=True)
+        df_sales.fillna("", inplace=True)
+        df_sales.to_excel(self.data_dir)
     
             
         
@@ -100,6 +104,21 @@ def saveSales(store_index, df_result, app, kind):
     
     return df_sales
 
+
+def saveSales_month(store_index, df_result, month:int):
+    data_dir = f'.\crawling\result\month_baemin_2022{month}'
+    global df_month
+        
+    if store_index == 0:
+        columns = [['No.', 'store', 'baemin', 'baemin', 'yogiyo', 'yogiyo', 'coupang', 'coupang'],
+            ['', '', 'sales', 'quantity', 'sales', 'quantity', 'sales', 'quantity']
+            ]
+        df_month = pd.DataFrame(index=range(0, 1), columns=columns)
+        
+    df_month = pd.concat([df_month, df_result])
+    df_month.to_excel(data_dir)
+    
+    return df_month
 
 
 def saveReview(store_index, df_result, app, kind):
