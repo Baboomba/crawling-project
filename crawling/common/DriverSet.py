@@ -1,6 +1,7 @@
 from selenium import webdriver
 
-
+import sys
+sys.path.append(r'.\crawling')
 
 def driver_chrome(headless = False):
 

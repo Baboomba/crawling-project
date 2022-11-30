@@ -6,6 +6,9 @@ from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Alignment
 
+import sys
+sys.path.append(r'.\crawling')
+
 from common.Log_info import LogInfo
 
 
@@ -14,18 +17,30 @@ class SaveData(LogInfo):
         super().__init__(app)
         yesterday = datetime.datetime.today() - datetime.timedelta(days=1)
         day = yesterday.strftime('%Y%m%d')
-        self.data_dir = r'.\crawling\result\{}_{}_{}.xlsx'.format(app, kind, day)
+        self.data_dir_day = r'.\crawling\result\{}_{}_{}.xlsx'.format(app, kind, day)
+        self.data_dir_month = r'.\crawling\result\{}_{}.xlsx'.format(app, kind)
     
     
-    def sales(self, store_index, df_result):
+    def sales_day(self, store_index, df_result):
         global df_sales
         
         if store_index == 0:
             df_sales = self.frame_sales
         
         df_sales = pd.concat([df_sales, df_result])
-        df_sales.to_excel(self.data_dir)
+        df_sales.to_excel(self.data_dir_day)
         return df_sales
+    
+    
+    def sales_month(self, store_index, df_result):
+        global df_month
+        
+        if store_index == 0:
+            df_month = self.frame_sales
+        
+        df_month = pd.concat([df_month, df_result])
+        df_month.to_excel(self.data_dir_month)
+        return df_month
     
     
     def review_BM(self, store_index, df_result):
@@ -105,8 +120,8 @@ def saveSales(store_index, df_result, app, kind):
     return df_sales
 
 
-def saveSales_month(store_index, df_result, month:int):
-    data_dir = f'.\crawling\result\month_baemin_2022{month}'
+def saveSales_month(store_index, df_result):
+    data_dir = f'.\crawling\result\baemin_month.xlsx'
     global df_month
         
     if store_index == 0:

@@ -2,6 +2,9 @@
 
 import pandas as pd
 
+import sys
+sys.path.append(r'.\crawling')
+
 def storeList(raw_num, col_num):
     wb = pd.read_excel(r'.\crawling\common\store_list.xls')
     df_storelist = pd.DataFrame(wb)
@@ -21,7 +24,8 @@ def storeSize():
 
 class LogInfo:
     def __init__(self, app):
-        self.columns = [['No.','store', app, app, ], ['', '', 'sales', 'quantity']]
+        self.sales_columns = [['No.','store', app, app, ], ['', '', 'sales', 'quantity']]
+        self.review_columns = ['store', 'nick', 'rate', 'view', 'img url', 'img_no', 'img']
         self.frame_sales = pd.DataFrame(
             index=range(0, 1),
             columns= [
@@ -30,7 +34,7 @@ class LogInfo:
             ])
         self.frame_review = pd.DataFrame(
             index=range(0, 1),
-            columns= ['store', 'nick', 'rate', 'view', 'img url', 'img_no', 'img']
+            columns= self.review_columns
         )
 
            

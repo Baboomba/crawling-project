@@ -1,67 +1,95 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
 
 import pandas as pd
+import time
 
 import sys
 sys.path.append(r'.\crawling')
 
 from common.DriverSet import driver_chrome
 from common.Log_info import LogInfo, storeSize
-from common.Save import dataDir, saveSales
-from baemin.LogBM import logIn, bridgePath, closeWindows
-from baemin.path import findPath
-from baemin.sale.getSale import scrapeSales
-from baemin.Exception import errorProcess
+from baemin.LogBM import LogProcess_BM
+from baemin.path import FindPath
+from baemin.sale.getSale import ScrapeSales
+from baemin.Exception import ErrorProcess
+from common.Save import SaveData
 
 
 def scrapeBM(headless:bool):
+    info = LogInfo(app='baemin')
+    login = LogProcess_BM(app='baemin')
+    path = FindPath()
+    scrape = ScrapeSales()
+    error = ErrorProcess(app='baemin')
+    save = SaveData(app='baemin', kind='sales')
+    
     URL = r'https://ceo.baemin.com/'
-    log_info = LogInfo(app='baemin')
     driver = driver_chrome(headless=headless)
     driver.get(URL)
-    data_dir = dataDir(app='baemin', kind='sale')
     store_num = storeSize()
-
+    
     for store_index in range(0, store_num):
         try:
             if driver.current_url == URL:
                 
-                try:
-                    logIn(driver, log_info, store_index)       # log in sucess or failure
-                    WebDriverWait(driver, 2).until_not(EC.url_contains('login'))
-                except:
-                    df_result = errorProcess(store_index, log_info, kind='sale')
-                    df_sales = saveSales(store_index, df_result, app='baemin', kind='sale')
-                    driver.get(URL)
+                login.main_page(driver)
+                login.login(driver, store_index)
+                if login.log_check(driver) == True:
+                    pass
+                else:
                     continue
-                    
-                bridgePath(driver)
-                findPath(driver, path='order')  # scrape sales data
-                df_result = scrapeSales(driver, log_info, store_index)
-                df_sales = saveSales(store_index, df_result, app='baemin', kind='sale')
-                #df_result = scrapeSale_month(driver, log_info, store_index)
-                #df_month = saveSale_month(store_index, df_result, app='baemin', kind='sale')
-                closeWindows(driver)
+                
+                #     try:
+                #         login.check_pass(driver)
+                #     except:
+                #         pass
+                # else:
+                #     continue
+
+                login.popup_close(driver)
+                login.self_service_click(driver)
+                path.check_category(driver)
+                path.path_adjust(driver)
+                path.path_order(driver)
+                scrape.calandar_click(driver)
+                scrape.select_yesterday(driver)
+                df_result = scrape.frame_result(driver, store_index)
+                df_sales = save.sales_day(store_index, df_result)
+                scrape.calandar_click(driver)
+                scrape.select_month(driver)
+                df_result_m = scrape.frame_result(driver, store_index)
+                df_month = save.sales_month(store_index, df_result_m)
+                login.check_window(driver)
+                login.logout(driver)                
+                
             else:
-                closeWindows(driver)
+                driver.get(URL)
+                time.sleep(1)
+                if driver.current_url == URL:
+                    continue
                 break
-                        
         except:
             print('error in ' + '{}'.format(store_index) + 'th store')
-            df_result = None
-            df_result = errorProcess(store_index, log_info, kind='sale')
-            df_sales = saveSales(store_index, df_result, app='baemin', kind='sale')
-            closeWindows(driver)
-        
+            df_error = error.sales_error(store_index)
+            df_sales = save.sales_day(store_index, df_error)
+            df_month = save.sales_month(store_index, df_error)
+            login.check_window(driver)
+            if driver.current_url == URL:
+                login.logout(driver)
+            else:
+                break
     df_sales.set_index('No.', drop=True, inplace=True)
     df_sales.fillna("", inplace=True)
-    df_sales.to_excel(data_dir)
+    df_sales.to_excel(save.data_dir_day)
+    df_month.set_index('No.', drop=True, inplace=True)
+    df_month.fillna("", inplace=True)
+    df_month.to_excel(save.data_dir_month)
     driver.quit()
 
 
 
+
 if __name__ == '__main__':
-    scrapeBM(headless=True)
+    scrapeBM(headless=False)
     print('complete')
