@@ -26,8 +26,7 @@ df_storelist.set_index('store')
 
 ### log in ###
 class LogProcess_BM(LogInfo):
-    def __init__(self, app):
-        super().__init__(self)
+    def __init__(self):
         self.log_btn = '//*[@id="root"]/div[1]/div[2]/div[2]/div[2]/div[1]/a'
         self.log_out = '//*[@id="root"]/div[1]/div[1]/div/div[1]/div/div[2]/span[4]/a'
         self.input_box = '//*[@id="root"]/div[1]/div/div[2]/form/div[1]/span/input'
@@ -58,7 +57,7 @@ class LogProcess_BM(LogInfo):
         time.sleep(self.ran_num + 0.3)
         driver.find_element(By.XPATH, self.confirm).click()  # confirm button
         
-    
+
     def log_check(self, driver):
         time.sleep(self.ran_num + 0.5)
         if driver.current_url == self.url_main:

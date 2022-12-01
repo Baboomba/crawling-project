@@ -11,13 +11,15 @@ from baemin.path import FindPath
 from baemin.sale.getSale import ScrapeSales
 from baemin.Exception import ErrorProcess
 from common.Save import SaveData
+from baemin.tip.get_tip import GetTips
 
 
 def scrapeBM(headless:bool):
     info = LogInfo(app='baemin')
-    login = LogProcess_BM(app='baemin')
+    login = LogProcess_BM()
     path = FindPath()
-    scrape = ScrapeSales()
+    scrape = ScrapeSales(app='baemin')
+    Tip = GetTips(app='baemin', start='2022-11-01', end='2022-11-30')
     error = ErrorProcess(app='baemin')
     save = SaveData(app='baemin', kind='sales')
     
@@ -53,10 +55,12 @@ def scrapeBM(headless:bool):
                 scrape.select_yesterday(driver)
                 df_result = scrape.frame_result(driver, store_index)
                 df_sales = save.sales_day(store_index, df_result)
-                scrape.calandar_click(driver)
-                scrape.select_month(driver)
-                df_result_m = scrape.frame_result(driver, store_index)
-                df_month = save.sales_month(store_index, df_result_m)
+                # scrape.calandar_click(driver)
+                # scrape.select_month(driver)
+                # df_result_m = scrape.frame_result(driver, store_index)
+                # df_month = save.sales_month(store_index, df_result_m)
+                # df_result_t = Tip.frame_tip(driver, store_index)
+                # df_tips = save.tip_bm(store_index, df_result_t)
                 login.check_window(driver)
                 login.logout(driver)                
                 
@@ -70,18 +74,25 @@ def scrapeBM(headless:bool):
             print('error in ' + '{}'.format(store_index) + 'th store')
             df_error = error.sales_error(store_index)
             df_sales = save.sales_day(store_index, df_error)
-            df_month = save.sales_month(store_index, df_error)
+            #df_month = save.sales_month(store_index, df_error)
+            # df_error_t = error.tip_error(store_index)
+            # df_tips = save.tip_bm(store_index, df_error_t)
             login.check_window(driver)
             if driver.current_url == URL:
                 login.logout(driver)
             else:
                 break
+            
     df_sales.set_index('No.', drop=True, inplace=True)
     df_sales.fillna("", inplace=True)
     df_sales.to_excel(save.data_dir_day)
-    df_month.set_index('No.', drop=True, inplace=True)
-    df_month.fillna("", inplace=True)
-    df_month.to_excel(save.data_dir_month)
+    #df_month.set_index('No.', drop=True, inplace=True)
+    #df_month.fillna("", inplace=True)
+    #df_month.to_excel(save.data_dir_month)
+    # df_tips.set_index('No.', drop=True, inplace=True)
+    # df_tips.fillna('', inpalce=True)
+    # df_tips.to_excel(save.data_dir_tip)
+    
     driver.quit()
 
 

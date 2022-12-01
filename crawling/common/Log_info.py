@@ -25,6 +25,7 @@ def storeSize():
 class LogInfo:
     def __init__(self, app):
         self.sales_columns = [['No.','store', app, app, ], ['', '', 'sales', 'quantity']]
+        self.tip_columns = [['No.', 'store', app], ['', '', 'tip']]
         self.review_columns = ['store', 'nick', 'rate', 'view', 'img url', 'img_no', 'img']
         self.frame_sales = pd.DataFrame(
             index=range(0, 1),
@@ -35,6 +36,10 @@ class LogInfo:
         self.frame_review = pd.DataFrame(
             index=range(0, 1),
             columns= self.review_columns
+        )
+        self.frame_tips = pd.DataFrame(
+            index=range(0, 1),
+            columns=self.tip_columns
         )
 
            

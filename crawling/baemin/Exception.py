@@ -9,13 +9,20 @@ from common.Log_info import LogInfo
 
 class ErrorProcess(LogInfo):
     def __init__(self, app):
-        super().__init__(self)
+        super().__init__(app)
         
     
     def sales_error(self, store_index):
         empty = []
         empty.append([store_index, self.getStore(store_index), 'error', ''])
         df_error = pd.DataFrame(empty, index=range(0, 1), columns = self.sales_columns)
+        return df_error
+    
+    
+    def tip_error(self, store_index):
+        empty = []
+        empty.append([store_index, self.getStore(store_index), 'error'])
+        df_error = pd.DataFrame(empty, index=range(0, 1), columns = self.tip_columns)
         return df_error
     
     
