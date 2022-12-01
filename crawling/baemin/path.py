@@ -20,6 +20,7 @@ class FindPath:
         self.order_tab = '//*[@id="root"]/div/div[3]/div[1]/nav/div/ul[7]/li[1]/a/span'
         self.review_tab = '//*[@id="root"]/div/div[3]/div[1]/nav/div/ul[3]/li[1]/a/span'
         self.home_tab = '//*[@id="root"]/div/div[3]/div[1]/nav/div/ul[1]/li/a/span'
+        self.tip_tab = '//*[@id="root"]/div/div[3]/div[1]/nav/div/ul[7]/li[2]/a/span'
 
 
     def check_category(self, driver):

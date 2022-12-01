@@ -28,6 +28,8 @@ class LogProcess(LogInfo):
             index=range(0, 1),
             columns= self.columns
         )
+        self.pass_first = '//*[@id="root"]/div/div[1]/div/div/div[2]/div[2]/div[2]/div/button'
+        self.pass_second = '//*[@id="root"]/div/div[1]/div/div/div[2]/div[2]/div[2]/div/button'
     
     
     def main_page(self, driver):
