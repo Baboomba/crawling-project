@@ -15,7 +15,7 @@ sys.path.append(r'.\crawling')
 from yogiyo.LogYGY import LogProcess
 
 
-class ScrapeSales(LogProcess):
+class ScrapeData(LogProcess):
     def __init__(self, app):
         super().__init__(app)
         self.url = r'https://owner.yogiyo.co.kr/owner/orders/'
@@ -53,7 +53,7 @@ class ScrapeSales(LogProcess):
         driver.find_element(By.XPATH, '//*[@id="orders-filters-form"]/div[2]/button').click()
         
     
-    def scrapeSales(self, driver, store_index):
+    def scrape_sales(self, driver, store_index):
         sale_y = driver.find_element(By.XPATH, '//*[@id="main"]/div[3]/table/tbody/tr/td[2]/div/strong').text
         qt_y = driver.find_element(By.XPATH, '//*[@id="main"]/div[3]/table/tbody/tr/td[1]/div/strong').text
         sale_y = sale_y.replace(',', '').replace('원', '')
@@ -68,7 +68,7 @@ class ScrapeSales(LogProcess):
         return y_result
     
     
-    def tips_YGY(self, driver, tips:bool):
+    def scrape_tips(self, driver, tips:bool):
         if tips == True:
             soup = self.parse_page(driver)
             tags = soup.find_all('tr')

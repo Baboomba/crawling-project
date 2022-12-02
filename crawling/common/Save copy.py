@@ -16,20 +16,14 @@ class SaveData(DataProcess):
     def __init__(self, app, kind):
         yesterday = datetime.datetime.today() - datetime.timedelta(days=1)
         day = yesterday.strftime('%Y%m%d')
+        month = int(datetime.datetime.today().strftime('%m')) - 1
         self.data_dir_day = r'.\crawling\result\{}_{}_{}.xlsx'.format(app, kind, day)
-        self.data_dir_month = r'.\crawling\result\{}_{}.xlsx'.format(app, kind)
-        self.data_dir_tip = r'.\crawling\result\{}_{}.xlsx'.format(app, kind)
+        self.data_dir_month = r'.\crawling\result\{}_{}_{}.xlsx'.format(app, kind, month)
+        self.data_dir_tip = r'.\crawling\result\{}_{}_{}.xlsx'.format(app, kind, month)
     
     
-    def sales_day(self, store_index, df_result):
-        global df_sales
-        
-        if store_index == 0:
-            df_sales = self.frame_sales
-        
-        df_sales = pd.concat([df_sales, df_result])
-        df_sales.to_excel(self.data_dir_day)
-        return df_sales
+    def sales_day(self, result):
+        result.to_excel(self.data_dir_day)        
     
     
     def sales_month(self, store_index, df_result):
@@ -101,3 +95,4 @@ class SaveData(DataProcess):
         df_sales.set_index('No.', drop=True, inplace=True)
         df_sales.fillna("", inplace=True)
         df_sales.to_excel(self.data_dir)
+

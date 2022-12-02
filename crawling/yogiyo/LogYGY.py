@@ -26,7 +26,7 @@ class LogProcess(LogInfo):
         self.url_sucess = r'https://owner.yogiyo.co.kr/owner/orders/'
         self.frame = pd.DataFrame(
             index=range(0, 1),
-            columns= self.columns
+            columns= self.sales_columns
         )
         self.pass_first = '//*[@id="root"]/div/div[1]/div/div/div[2]/div[2]/div[2]/div/button'
         self.pass_second = '//*[@id="root"]/div/div[1]/div/div/div[2]/div[2]/div[2]/div/button'
@@ -70,12 +70,12 @@ class LogProcess(LogInfo):
         time.sleep(ran_num)
         
         
-    def make_frame(self, store_index, value:str):
+    def frame_sales(self, store_index):
         empty = []
         store = self.getStore(store_index)
-        error = [store_index, store, value, '']
+        error = [store_index, store, 'error', '']
         empty.append(error)
-        y_result = pd.DataFrame(empty, columns= self.columns)
+        y_result = pd.DataFrame(empty, columns= self.sales_columns)
         return y_result
 
 
