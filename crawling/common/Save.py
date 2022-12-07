@@ -9,61 +9,29 @@ from openpyxl.styles import Alignment
 import sys
 sys.path.append(r'.\crawling')
 
-from common.Database import DataProcess
 
-
-class SaveData(DataProcess):
-    def __init__(self, app, kind):
+class SaveData():
+    def data_dir(self, app, kind, period):
         yesterday = datetime.datetime.today() - datetime.timedelta(days=1)
         day = yesterday.strftime('%Y%m%d')
-        self.data_dir_day = r'.\crawling\result\{}_{}_{}.xlsx'.format(app, kind, day)
-        self.data_dir_month = r'.\crawling\result\{}_{}.xlsx'.format(app, kind)
-        self.data_dir_tip = r'.\crawling\result\{}_{}.xlsx'.format(app, kind)
+        month = int(datetime.datetime.today().strftime('%m')) - 1
+        if period == 'day':
+            dir = rf'.\crawling\result\{app}_{kind}_{day}.xlsx'
+        elif period == 'month':
+            dir = rf'.\crawling\result\{app}_{kind}_{month}.xlsx'
+        return dir
     
     
-    def sales_day(self, store_index, df_result):
-        global df_sales
+    def save_data(self, result, app, kind, period):
+        data_dir = self.data_dir(app, kind, period)
+        result.to_excel(data_dir)
         
-        if store_index == 0:
-            df_sales = self.frame_sales
-        
-        df_sales = pd.concat([df_sales, df_result])
-        df_sales.to_excel(self.data_dir_day)
-        return df_sales
     
+    def set_index(self, result):
+        result.set_index('No.', drop=True, inplace=True)
+        result.fillna("", inplace=True)
+        return result
     
-    def sales_month(self, store_index, df_result):
-        global df_month
-        
-        if store_index == 0:
-            df_month = self.frame_sales
-        
-        df_month = pd.concat([df_month, df_result])
-        df_month.to_excel(self.data_dir_month)
-        return df_month
-    
-    
-    def tip_bm(self, store_index, df_result):
-        global df_tips
-        
-        if store_index == 0:
-            df_tips = self.frame_tips
-        
-        df_tips = pd.concat([df_tips, df_result])
-        df_tips.to_excel(self.data_dir_tip)
-        return df_tips
-    
-    
-    def review_BM(self, store_index, df_result):
-        global df_review
-        
-        if store_index == 0:
-            df_review = self.frame_review
-                    
-        df_review = pd.concat([df_review, df_result])
-        df_review.fillna('', inplace=True)
-        df_review.to_excel(self.data_dir)
-        return df_review
     
     
     def process_data(self):
@@ -95,9 +63,3 @@ class SaveData(DataProcess):
                 continue
         
         wb.save(self.data_dir)
-
-
-    def set_index(self):
-        df_sales.set_index('No.', drop=True, inplace=True)
-        df_sales.fillna("", inplace=True)
-        df_sales.to_excel(self.data_dir)

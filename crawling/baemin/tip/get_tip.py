@@ -16,9 +16,8 @@ from common.Log_info import LogInfo
 
 
 class GetTips(LogInfo):
-    def __init__(self, app, start:str, end:str):
-        super().__init__(app)
-        #self.calandar = '//*[@id="root"]/div/div[3]/div[2]/div[1]/div/div[2]/button/div/p[2]'
+    def __init__(self, start:str, end:str):
+        super().__init__()
         self.data_settle = '/html/body/pre'
         self.start = start
         self.end = end
@@ -51,21 +50,19 @@ class GetTips(LogInfo):
     def get_tip(self, driver):
         empty = []
         for page_no in range(0, 10):
-            time.sleep(self.ran_num + 0.5)
+            time.sleep(self.ran_num + 1.3)
             j_obj = self.trans_json(driver, page_no)
             if j_obj['totalSize'] != 0:
                 tips = self.parse_json(j_obj)
                 empty.append(tips)
             else:
                 break
-        tip = sum(empty)
-        return tip
+        scraped = sum(empty)
+        return scraped
     
     
-    def frame_tip(self, driver, store_index):
+    def list_tips(self, driver, store_index):
         store_name = self.getStore(store_index)
-        empty = []
         tip = self.get_tip(driver)
-        empty.append([store_index, store_name, tip])
-        df_result = pd.DataFrame(empty, index=range(0, 1), columns = self.tip_columns)
-        return df_result
+        scraped = [store_index, store_name, tip, '']
+        yield scraped

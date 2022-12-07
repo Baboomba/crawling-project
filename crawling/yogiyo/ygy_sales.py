@@ -15,9 +15,11 @@ sys.path.append(r'.\crawling')
 from yogiyo.LogYGY import LogProcess
 
 
+
+
 class ScrapeData(LogProcess):
-    def __init__(self, app):
-        super().__init__(app)
+    def __init__(self, kind):
+        LogProcess.__init__(self, kind)
         self.url = r'https://owner.yogiyo.co.kr/owner/orders/'
         
     
@@ -35,13 +37,9 @@ class ScrapeData(LogProcess):
         name_list = driver.find_elements(By.CLASS_NAME, 'name')
         
         for name in range(len(name_list)):
-            if '프랭크' and this_name[:2] in name_list[name].text:
+            if ('프랭크' and this_name[:2]) in name_list[name].text:
                 this_store = name_list[name]
-        try:
-            this_store.click()
-        except:
-            y_result = self.make_frame(self, store_index)
-            return y_result
+                return this_store.click()
     
     
     def select_date(self, driver, start, end):
@@ -61,17 +59,15 @@ class ScrapeData(LogProcess):
         qt_y = qt_y.replace(',', '').replace('건', '')
         qt = int(qt_y)
         store = self.getStore(store_index)
-        merge = [store_index, store, sale, qt]
-        empty = []
-        empty.append(merge)
-        y_result = pd.DataFrame(empty, columns= self.columns)
-        return y_result
+        scraped = [store_index, store, sale, qt]
+        return scraped
     
     
-    def scrape_tips(self, driver, tips:bool):
-        if tips == True:
-            soup = self.parse_page(driver)
-            tags = soup.find_all('tr')
-            tip = list(tags[-1])[5].text
-            tip = int(tip.replace(',', ''))
-            return tip
+    def scrape_tips(self, driver, store_index):
+        name = self.getStore(store_index)
+        soup = self.parse_page(driver)
+        tags = soup.find_all('tr')
+        tip = list(tags[-1])[5].text
+        tip = int(tip.replace(',', ''))
+        scraped = [store_index, name, tip, '']
+        return scraped

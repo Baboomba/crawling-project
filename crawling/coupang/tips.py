@@ -1,162 +1,105 @@
-import selenium
+import sys
 from selenium import webdriver
-from selenium.webdriver import ActionChains
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.chrome.options import Options
-
-import pandas as pd
-
-
-from bs4 import BeautifulSoup
-
+sys.path.append(r'.\crawling')
 import time
 
-from fake_useragent import UserAgent
+### my modules ###
+from common.DriverSet import DriverSet
+from common.Log_info import LogInfo
 
-
-ua = UserAgent(use_cache_server=True)
-ua.random
-
-options = Options()
-options.add_argument('user-agent=%s'%ua)
 
 
 URL = r"https://store.coupangeats.com/merchant/login"
-driver = webdriver.Chrome(executable_path=r'C:\Users\SEC\chromedriver', options=options)
-
-driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
-    "source": """
-            Object.defineProperty(navigator, 'webdriver', {
-                get: () => undefined
-            })
-            """
-})
 
 
-# log in
-
-class log_info:
+class ScrapeTip(LogInfo):
+    def __init__(self):
+        super().__init__()
+        self.input_box = '//*[@id="loginId"]'
+        self.confirm_btn = '//*[@id="merchant-login"]/div/div[2]/div/div/div/form/button'
+        self.url_login = r"https://store.coupangeats.com/merchant/login"
+        self.logout_path = '//*[@id="merchant-management"]/div/div/header/div[1]/a[2]'
+        self.logout_btn = '//*[@id="merchant-management"]/div/div/header/div[1]/a[1]/ul/li[2]/a/span'
     
-    def get_cpid(self, i):
-        cpid = df.iloc[i][6]
-        return cpid
     
-    def get_cppw(self, i):
-        cppw = df.iloc[i][7]
-        return cppw
-
-
-    
-
-wb = pd.read_excel(r'C:\Users\SEC\Coding\VScode\crawling\store_list.xls')
-df = pd.DataFrame(wb)
-login = log_info()
-shape_df = wb.shape[0]
-error_list = []
-time.sleep(1.5)
-driver.get(url = URL)
-
-
-for i in range(0, shape_df):
-    try:
-
-        main_p = driver.page_source
-        soup = BeautifulSoup(main_p, "html.parser")
-        log_click = driver.find_element(By.XPATH, '//*[@id="loginId"]')
-        log_click.click()
-        log_click.send_keys(Keys.CONTROL, 'a')
-        log_click.send_keys(Keys.DELETE)
-        log_click.click()
-        webdriver.ActionChains(driver).send_keys(login.get_cpid(i)).perform()
-        time.sleep(1.5)
-        webdriver.ActionChains(driver).key_down(Keys.TAB).send_keys(login.get_cppw(i)).perform()
+    def log_in(self, driver, store_index):
+        time.sleep(1)
+        driver.page_source
+        driver.find_element(By.XPATH, '//*[@id="loginId"]').clear()
+        WebDriverWait(driver, 2).until(EC.element_to_be_clickable(
+            (By.XPATH, self.input_box)
+        )).click()
+        webdriver.ActionChains(driver).key_down(Keys.CONTROL).send_keys("a").key_up(Keys.CONTROL).send_keys(Keys.BACKSPACE).perform()
+        webdriver.ActionChains(driver).send_keys(self.getCpid(store_index)).perform()
         time.sleep(0.5)
-        driver.find_element(By.XPATH, '//*[@id="merchant-login"]/div/div[2]/div/div/div/form/button').click()   # log in
-
-        if driver.current_url != URL:
-            time.sleep(3)
-            ceo_p = driver.page_source
-            soup2 = BeautifulSoup(ceo_p, "html.parser") # renewing HTML
-            try:
-                time.sleep(2)
-                driver.find_element(By.XPATH, '//*[@id="merchant-onboarding-body"]/div[3]/div/div/div/button').click()
-                time.sleep(1)
-                driver.find_element(By.XPATH, '//*[@id="merchant-onboarding-body"]/div[2]/div/div/div/button').click()
-
-
-                driver.find_element(By.XPATH, '//*[@id="merchant-management"]/div/nav/div[2]/ul/li[2]/a/span[2]').click() # order page
-                time.sleep(1)
-                driver.find_element(By.XPATH, '//*[@id="merchant-management"]/div/div/div[2]/div[1]/div/div/div/div[1]/div[1]/button/span').click()
-                time.sleep(1)
-                driver.find_element(By.XPATH, '//*[@id="merchant-onboarding-body"]/div[2]/div[3]/div/div[3]/div/div[1]/div/div[2]/div/div/div').click()
-                time.sleep(0.5)
-                driver.find_element(By.XPATH, '//*[@id="merchant-onboarding-body"]/div[2]/div[3]/div/div[3]/div/div[1]/div/div[2]/div/div/ul/li/a').click()
-                time.sleep(0.5)
-                driver.find_element(By.XPATH, '//*[@id="merchant-onboarding-body"]/div[2]/div[3]/div/div[3]/div/div[2]/div[2]/div[1]/div/div[1]/div/div/div').click()
-                time.sleep(0.5)
-                driver.find_element(By.XPATH, '//*[@id="merchant-onboarding-body"]/div[2]/div[3]/div/div[3]/div/div[2]/div[2]/div[1]/div/div[1]/div/div/ul/li[3]/a').click()
-                time.sleep(0.5)
-                driver.find_element(By.XPATH, '//*[@id="merchant-onboarding-body"]/div[2]/div[3]/div/div[3]/div/div[2]/div[2]/div[1]/div/div[2]/div/div/div').click()
-                time.sleep(1)            
-                driver.find_element(By.XPATH, '//*[@id="merchant-onboarding-body"]/div[2]/div[3]/div/div[3]/div/div[2]/div[2]/div[1]/div/div[2]/div/div/ul/li[10]/a').click()
-                time.sleep(1)
-                driver.find_element(By.XPATH, '//*[@id="merchant-onboarding-body"]/div[2]/div[3]/div/div[4]/button[2]/span').click()
-                time.sleep(1)
-                driver.find_element(By.XPATH, '//*[@id="merchant-onboarding-body"]/div[2]/div[3]/div/div[1]/button/span').click()
-                time.sleep(1)
-                driver.find_element(By.XPATH, '//*[@id="merchant-management"]/div/div/header/div[1]/a[2]').click()
-                time.sleep(1)
-                driver.find_element(By.XPATH, '//*[@id="merchant-management"]/div/div/header/div[1]/a[1]/ul/li[2]/a/span').click()
-                time.sleep(1)
-                    
-                                
-            except:
-                driver.find_element(By.XPATH, '//*[@id="merchant-onboarding-body"]/div[2]/div/div/div/button').click()
-                time.sleep(0.5)
-                driver.find_element(By.XPATH, '//*[@id="merchant-management"]/div/nav/div[2]/ul/li[2]/a/span[2]').click() # order page
-                time.sleep(1)
-                driver.find_element(By.XPATH, '//*[@id="merchant-management"]/div/div/div[2]/div[1]/div/div/div/div[1]/div[1]/button/span').click()
-                time.sleep(1)
-                driver.find_element(By.XPATH, '//*[@id="merchant-onboarding-body"]/div[2]/div[3]/div/div[3]/div/div[1]/div/div[2]/div/div/div').click()
-                time.sleep(0.5)
-                driver.find_element(By.XPATH, '//*[@id="merchant-onboarding-body"]/div[2]/div[3]/div/div[3]/div/div[1]/div/div[2]/div/div/ul/li/a').click()
-                time.sleep(0.5)
-                driver.find_element(By.XPATH, '//*[@id="merchant-onboarding-body"]/div[2]/div[3]/div/div[3]/div/div[2]/div[2]/div[1]/div/div[1]/div/div/div').click()
-                time.sleep(0.5)
-                driver.find_element(By.XPATH, '//*[@id="merchant-onboarding-body"]/div[2]/div[3]/div/div[3]/div/div[2]/div[2]/div[1]/div/div[1]/div/div/ul/li[3]/a').click()
-                time.sleep(0.5)
-                driver.find_element(By.XPATH, '//*[@id="merchant-onboarding-body"]/div[2]/div[3]/div/div[3]/div/div[2]/div[2]/div[1]/div/div[2]/div/div/div').click()
-                time.sleep(1)            
-                driver.find_element(By.XPATH, '//*[@id="merchant-onboarding-body"]/div[2]/div[3]/div/div[3]/div/div[2]/div[2]/div[1]/div/div[2]/div/div/ul/li[10]/a').click()
-                time.sleep(1)
-                driver.find_element(By.XPATH, '//*[@id="merchant-onboarding-body"]/div[2]/div[3]/div/div[4]/button[2]/span').click()
-                time.sleep(1)
-                driver.find_element(By.XPATH, '//*[@id="merchant-onboarding-body"]/div[2]/div[3]/div/div[1]/button/span').click()
-                time.sleep(1)
-                driver.find_element(By.XPATH, '//*[@id="merchant-management"]/div/div/header/div[1]/a[2]').click()
-                time.sleep(1)
-                driver.find_element(By.XPATH, '//*[@id="merchant-management"]/div/div/header/div[1]/a[1]/ul/li[2]/a/span').click()
-                time.sleep(1)
-
-                
-        else:
-            error_list.append(i)
-            print(i, 'log error')
-            
-    except:
-        driver.close()
-        driver = webdriver.Chrome(executable_path=r'C:\Users\SEC\chromedriver', options=options)
-        driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
-    "source": """
-            Object.defineProperty(navigator, 'webdriver', {
-                get: () => undefined
-            })
-            """
-})
-        driver.get(url = r'https://store.coupangeats.com/merchant/login')
+        webdriver.ActionChains(driver).key_down(Keys.TAB).send_keys(
+            self.getCppw(store_index)).perform()
+        time.sleep(0.5)
+        driver.find_element(By.XPATH, self.confirm_btn).click()
+        time.sleep(1)
+    
         
-print('complete')
+        
+    def extract_store_num(self, driver):
+        current_url = driver.current_url
+        store_num = current_url[-6:]
+        return store_num
+    
+    
+    def path_sales(self, driver):
+        store_num = self.extract_store_num(driver)
+        url_sales = rf'https://store.coupangeats.com/merchant/management/orders/{store_num}'
+        driver.get(url_sales)
+        time.sleep(1)
+        
+        
+    def download_tips(self, driver, date:str):
+        store_num = self.extract_store_num(driver)
+        url_tips = rf'https://store.coupangeats.com/api/v1/merchant/web/emails?type=salesOrder&action=download&downloadRequestDate={date}&storeId={store_num}'
+        driver.get(url_tips)
+        time.sleep(1)
+    
+    
+    def logout(self, driver):
+        driver.find_element(By.XPATH, self.logout_path).click()
+        time.sleep(1)
+        driver.find_element(By.XPATH, self.logout_btn).click()
+        time.sleep(1)
+        
+
+
+        
+        
+if __name__ == '__main__':
+    Driver = DriverSet()
+    scrape = ScrapeTip()
+    info = LogInfo()
+    
+    driver = Driver.driver_for_cp()
+    driver.get(r'https://store.coupangeats.com/')
+    time.sleep(1)
+    driver.find_element(By.XPATH, '//*[@id="merchant-intro"]/div/div[1]/div/div/div/div[2]/a[2]').click()
+    size = info.store_size()
+    
+    for store_index in range(0, size):
+        if info.getCpid(store_index) == ('' or None):
+            continue
+        try:
+            scrape.log_in(driver, store_index)
+            if driver.current_url == scrape.url_login:
+                continue
+            time.sleep(1.5)
+            scrape.path_sales(driver)
+            time.sleep(1.5)
+            scrape.download_tips(driver, date='2022-11')
+            time.sleep(1.5)
+            scrape.logout(driver)
+        except:
+            print(f'{store_index}th store error')
+            driver.get(scrape.url_login)
+            time.sleep(1)
+    print('complete')

@@ -15,9 +15,10 @@ import random
 
 from common.Log_info import LogInfo
 
+
 class ScrapeSales(LogInfo):
-    def __init__(self, app):
-        super().__init__(app)
+    def __init__(self):
+        super().__init__()
         self.calandar = '//*[@id="root"]/div/div[3]/div[2]/div[1]/div/div[1]/button[1]/div/p[2]'
         self.tab_day = '//*[@id="root"]/div/div[4]/div[1]/form/div[2]/div/div/div[1]/label[1]/div'
         self.tab_month = '//*[@id="root"]/div/div[4]/div[1]/form/div[2]/div/div/div[1]/label[2]/div'
@@ -70,11 +71,9 @@ class ScrapeSales(LogInfo):
         return qt
     
     
-    def frame_result(self, driver, store_index):
+    def list_sales(self, driver, store_index):
         store_name = self.getStore(store_index)
-        empty = []
         sale = self.scrape_sales(driver)
         qt = self.scrape_quantity(driver)
-        empty.append([store_index, store_name, sale, qt])
-        df_result = pd.DataFrame(empty, index=range(0, 1), columns = self.sales_columns)
-        return df_result
+        scraped = [store_index, store_name, sale, qt]
+        return scraped
