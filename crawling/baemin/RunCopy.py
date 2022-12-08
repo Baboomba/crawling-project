@@ -38,6 +38,8 @@ def scrapeBM(headless:bool):
         try:
             login.main_page(driver)
             login.login(driver, store_index)
+            login.pass_change(driver)
+            login.biz_uni(driver)
             if login.log_check(driver) == True:
                 pass
             else:

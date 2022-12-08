@@ -31,8 +31,9 @@ class LogProcess_BM(LogInfo):
         super().__init__()
         self.log_btn = '//*[@id="root"]/div[1]/div[2]/div[2]/div[2]/div[1]/a'
         self.log_out = '//*[@id="root"]/div[1]/div[1]/div/div[1]/div/div[2]/span[4]/a'
-        self.input_box = '//*[@id="root"]/div[1]/div/div[2]/form/div[1]/span/input'
-        self.confirm = '//*[@id="root"]/div[1]/div/div[2]/form/button'
+        self.input_box = '//*[@id="root"]/div[1]/div/div/form/div[1]/span/input'
+        self.confirm = '//*[@id="root"]/div[1]/div/div/form/button'
+        self.next_btn = '//*[@id="root"]/div[1]/div[1]/div/div/form/div[2]/a/span'
         self.pop_up = '//*[@id="root"]/dialog/header/button'
         self.self_service = '//*[@id="root"]/div[1]/div[1]/div/div[1]/div/div[1]/span[1]'
         self.url_self = 'https://ceo.baemin.com/self-service'
@@ -60,6 +61,26 @@ class LogProcess_BM(LogInfo):
             self.getBmpw(store_index)).perform()
         time.sleep(self.ran_num + 0.3)
         driver.find_element(By.XPATH, self.confirm).click()  # confirm button
+        
+
+    def pass_change(self, driver):
+        try:
+            WebDriverWait(driver, 1.5).until(EC.element_to_be_clickable((By.XPATH, self.next_btn))).click()
+        except:
+            pass
+    
+    
+    def biz_uni(self, driver):
+        try:
+            WebDriverWait(driver, 1.5).until(EC.element_to_be_clickable(
+                (By.XPATH, '//*[@id="root"]/div[1]/div[1]/div/div/form/ul/li/div/label/section/span')
+            )).click()
+            time.sleep(1)
+            WebDriverWait(driver, 1).until(EC.element_to_be_clickable(
+                (By.XPATH, '//*[@id="root"]/div[1]/div[1]/div/div/form/button')
+            )).click()
+        except:
+            pass
         
 
     def log_check(self, driver):
