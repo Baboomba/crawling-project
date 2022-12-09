@@ -32,7 +32,7 @@ class ScrapeSales(LogInfo):
         
     def calandar_click(self, driver):
         webdriver.ActionChains(driver).key_down(Keys.PAGE_UP).perform()
-        time.sleep(self.ran_num + 0.5)
+        time.sleep(self.ran_num + 1)
         webdriver.ActionChains(driver).key_down(Keys.PAGE_UP).perform()
         WebDriverWait(driver, 2).until(EC.element_to_be_clickable(
             (By.XPATH, self.calandar)
@@ -41,20 +41,20 @@ class ScrapeSales(LogInfo):
         
     def select_yesterday(self, driver):
         driver.find_element(By.XPATH, self.tab_day).click()
-        time.sleep(self.ran_num + 0.1)
+        time.sleep(self.ran_num + 0.5)
         driver.find_element(By.XPATH, self.radio_yesterday).click()
-        time.sleep(self.ran_num + 0.1)
+        time.sleep(self.ran_num + 0.5)
         driver.find_element(By.XPATH, self.confirm).click()
-        time.sleep(self.ran_num + 0.1)
+        time.sleep(self.ran_num + 0.5)
         
         
     def select_month(self, driver):
         driver.find_element(By.XPATH, self.tab_month).click()
-        time.sleep(self.ran_num + 0.3)
+        time.sleep(self.ran_num + 0.5)
         driver.find_element(By.XPATH, self.radio_prev_month).click()
-        time.sleep(self.ran_num + 0.3)
+        time.sleep(self.ran_num + 0.5)
         driver.find_element(By.XPATH, self.confirm).click()
-        time.sleep(self.ran_num + 0.3)
+        time.sleep(self.ran_num + 0.5)
 
 
     def scrape_sales(self, driver):

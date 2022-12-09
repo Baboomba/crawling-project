@@ -24,7 +24,7 @@ class FindPath:
 
 
     def check_category(self, driver):
-        time.sleep(self.ran_num)
+        time.sleep(self.ran_num + 1)
         driver.switch_to.window(driver.window_handles[-1])
         try:
             WebDriverWait(driver, self.ran_num + 0.5).until(EC.element_to_be_clickable(
@@ -35,12 +35,12 @@ class FindPath:
 
     def path_adjust(self, driver):
         WebDriverWait(driver, 2).until(EC.element_to_be_clickable((By.XPATH, self.review_tab))).click()
-        time.sleep(self.ran_num)
+        time.sleep(self.ran_num + 1)
 
 
     def path_tip(self, driver):
         webdriver.ActionChains(driver).key_down(Keys.PAGE_DOWN).perform()
-        time.sleep(self.ran_num + 0.3)
+        time.sleep(self.ran_num + 1)
         driver.find_element(By.XPATH, self.tip_tab).click()
         time.sleep(self.ran_num)
         return driver.page_source

@@ -47,7 +47,7 @@ class LogProcess_BM(LogInfo):
         WebDriverWait(driver, 2).until(EC.element_to_be_clickable(
             (By.XPATH, self.log_btn)
         )).click()
-        time.sleep(self.ran_num + 0.5)
+        time.sleep(self.ran_num + 1)
     
     
     def login(self, driver, store_index):
@@ -59,7 +59,7 @@ class LogProcess_BM(LogInfo):
         time.sleep(self.ran_num + 0.3)
         webdriver.ActionChains(driver).key_down(Keys.TAB).send_keys(
             self.getBmpw(store_index)).perform()
-        time.sleep(self.ran_num + 0.3)
+        time.sleep(self.ran_num + 1)
         driver.find_element(By.XPATH, self.confirm).click()  # confirm button
         
 
