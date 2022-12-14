@@ -21,11 +21,23 @@ class FindPath:
         self.review_tab = '//*[@id="root"]/div/div[3]/div[1]/nav/div/ul[3]/li[1]/a/span'
         self.home_tab = '//*[@id="root"]/div/div[3]/div[1]/nav/div/ul[1]/li/a/span'
         self.tip_tab = '//*[@id="root"]/div/div[3]/div[1]/nav/div/ul[7]/li[2]/a/span'
+        self.popup = '//*[@id="root"]/div/div[4]/div[1]/form/div[1]/div[1]/button'
+        
+        
+    def path_popup(self, driver):
+        time.sleep(self.ran_num + 1)
+        driver.switch_to.window(driver.window_handles[-1])
+        try:
+            time.sleep(self.ran_num + 1)
+            WebDriverWait(driver, 2).until(EC.element_to_be_clickable(
+                (By.XPATH, self.popup)
+            )).click()
+        except:
+            pass
 
 
     def check_category(self, driver):
         time.sleep(self.ran_num + 1)
-        driver.switch_to.window(driver.window_handles[-1])
         try:
             WebDriverWait(driver, self.ran_num + 0.5).until(EC.element_to_be_clickable(
                 (By.XPATH, self.category_button))).click()

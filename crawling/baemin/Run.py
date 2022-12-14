@@ -48,6 +48,7 @@ def scrapeBM(headless:bool):
             #login.alert_close(driver)
             login.popup_close(driver)
             login.self_service_click(driver)
+            path.path_popup(driver)
             path.check_category(driver)
             path.path_adjust(driver)
             path.path_order(driver)
