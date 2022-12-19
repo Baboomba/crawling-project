@@ -9,6 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import sys
 sys.path.append(r'.\crawling')
 
+import datetime
 import time
 import pandas as pd
 import random
@@ -77,3 +78,51 @@ class ScrapeSales(LogInfo):
         qt = self.scrape_quantity(driver)
         scraped = [store_index, store_name, sale, qt]
         return scraped
+    
+    
+
+class Calandar:
+    def __init__(self):
+        self.prev_btn = '//*[@id="root"]/div/div[4]/div[1]/form/div[2]/div/div/div[2]/div/div/div/div/div/div[1]/span[1]'
+        self.next_btn = '//*[@id="root"]/div/div[4]/div[1]/form/div[2]/div/div/div[2]/div/div/div/div/div/div[1]/span[2]'
+        self.cal_btn = '//*[@id="root"]/div/div[3]/div[2]/div[1]/div/div[1]/button[1]'
+        self.left_cal = '//*[@id="root"]/div/div[4]/div[1]/form/div[2]/div/div/div[2]/div/button[1]'
+        self.right_cal = '//*[@id="root"]/div/div[4]/div[1]/form/div[2]/div/div/div[2]/div/button[2]'
+        self.confirm_btn = '//*[@id="root"]/div/div[4]/div[1]/form/div[3]/button'
+        
+        
+    def dateForm(self, start_date):
+        date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+        transDate = date.strftime('%a %b %d %Y')
+        return transDate
+    
+    
+    def date_picker(self, driver, dir='left'):
+        driver.find_element(By.XPATH, self.cal_btn).click()
+        time.sleep(2)
+        if dir == 'left':
+            driver.find_element(By.XPATH, self.left_cal).click()
+        elif dif == 'right':
+            driver.find_element(By.XPATH, self.right_cal).click()
+        time.sleep(2)        
+    
+    
+    def extract_tag(self, driver):
+        picker = driver.find_elements(By.CLASS_NAME, 'DayPicker-Day')
+        tag_list = []
+        for start_date in range(len(picker)):
+            date_List = picker[start_date].get_attribute("aria-label")
+            tag_list.append(date_List)
+        return tag_list
+        
+    
+    def find_date(self, driver, start_date):
+        start = self.dateForm(start_date)
+        while True:
+            tag = self.extract_tag(driver)
+            if start not in tag:
+                driver.find_element(By.XPATH, self.prev_btn).click()
+            else:
+                picker = driver.find_elements(By.CLASS_NAME, 'DayPicker-Day')
+                picker[tag.index(start)].click()
+        return driver.find_element(By.XPATH, self.confirm_btn)
