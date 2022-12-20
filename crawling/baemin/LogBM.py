@@ -65,12 +65,12 @@ class LogProcess_BM(LogInfo):
 
     def pass_change(self, driver):
         try:
-            WebDriverWait(driver, 1.5).until(EC.element_to_be_clickable((By.XPATH, self.next_btn))).click()
+            WebDriverWait(driver, 1.5).until(EC.element_to_be_clickable((By.XPATH, self.next_btn))).click()   # 비밀번호 변경 안내 문구
         except:
             pass
     
     
-    def biz_uni(self, driver):
+    def biz_uni(self, driver):    # 통합회원 수락 페이지
         try:
             WebDriverWait(driver, 1.5).until(EC.element_to_be_clickable(
                 (By.XPATH, '//*[@id="root"]/div[1]/div[1]/div/div/form/ul/li/div/label/section/span')
@@ -133,3 +133,14 @@ class LogProcess_BM(LogInfo):
             (By.XPATH, self.log_out)
         )).click()
         time.sleep(self.ran_num + 0.5)
+    
+    
+    def logout_another(self, driver):  # 단순 경로용 로그아웃
+        link = '//*[@id="root"]/div/header/div[2]/a[2]'   # 우상단 이름 버튼
+        logout = '//*[@id="root"]/div/div[3]/div[2]/div[1]/div/div/div[1]/div[2]/a'
+        driver.find_element(By.XPATH, link).click()
+        time.sleep(self.ran_num + 1)
+        WebDriverWait(driver, 2).until(EC.element_to_be_clickable(
+            (By.XPATH, logout)
+        )).click()
+        time.sleep(self.ran_num*2)

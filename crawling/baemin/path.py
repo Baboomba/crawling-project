@@ -22,6 +22,8 @@ class FindPath:
         self.home_tab = '//*[@id="root"]/div/div[3]/div[1]/nav/div/ul[1]/li/a/span'
         self.tip_tab = '//*[@id="root"]/div/div[3]/div[1]/nav/div/ul[7]/li[2]/a/span'
         self.popup = '//*[@id="root"]/div/div[4]/div[1]/form/div[1]/div[1]/button'
+        self.survey = '//*[@id="root"]/div/div[4]/div[1]/form/div[1]/div[1]/button'
+        self.url_order = 'https://ceo.baemin.com/self-service/orders/history'
         
         
     def path_popup(self, driver):
@@ -72,3 +74,14 @@ class FindPath:
         driver.find_element(By.XPATH, self.review_tab).click()
         time.sleep(self.ran_num)
         return driver.page_source
+    
+    
+    def simple_path(self, driver):
+        time.sleep(self.ran_num + 1)
+        driver.get(self.url_order)
+        try:
+            WebDriverWait(driver, 3).until(EC.element_to_be_clickable(
+                (By.XPATH, self.survey)
+            )).click()
+        except:
+            pass

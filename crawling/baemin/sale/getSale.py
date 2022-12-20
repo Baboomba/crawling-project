@@ -89,22 +89,23 @@ class Calandar:
         self.left_cal = '//*[@id="root"]/div/div[4]/div[1]/form/div[2]/div/div/div[2]/div/button[1]'
         self.right_cal = '//*[@id="root"]/div/div[4]/div[1]/form/div[2]/div/div/div[2]/div/button[2]'
         self.confirm_btn = '//*[@id="root"]/div/div[4]/div[1]/form/div[3]/button'
+        self.ran_num = round(random.random(), 2)
         
         
-    def dateForm(self, start_date):
-        date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+    def dateForm(self, date):
+        date = datetime.datetime.strptime(date, '%Y-%m-%d')
         transDate = date.strftime('%a %b %d %Y')
         return transDate
     
     
-    def date_picker(self, driver, dir='left'):
-        driver.find_element(By.XPATH, self.cal_btn).click()
-        time.sleep(2)
+    def calandar_picker(self, driver, dir='left'):
         if dir == 'left':
+            driver.find_element(By.XPATH, self.cal_btn).click()
+            time.sleep(self.ran_num + 1)
             driver.find_element(By.XPATH, self.left_cal).click()
-        elif dif == 'right':
+        elif dir == 'right':
             driver.find_element(By.XPATH, self.right_cal).click()
-        time.sleep(2)        
+        time.sleep(self.ran_num + 1)
     
     
     def extract_tag(self, driver):
@@ -116,13 +117,23 @@ class Calandar:
         return tag_list
         
     
-    def find_date(self, driver, start_date):
-        start = self.dateForm(start_date)
+    def find_picker(self, driver, date):
+        target_date = self.dateForm(date)
         while True:
             tag = self.extract_tag(driver)
-            if start not in tag:
+            if target_date not in tag:
                 driver.find_element(By.XPATH, self.prev_btn).click()
+                time.sleep(self.ran_num + 0.5)
             else:
                 picker = driver.find_elements(By.CLASS_NAME, 'DayPicker-Day')
-                picker[tag.index(start)].click()
-        return driver.find_element(By.XPATH, self.confirm_btn)
+                picker[tag.index(target_date)].click()
+                time.sleep(self.ran_num + 1)
+                break
+    
+    
+    def select_date(self, driver, start:str, end:str):
+        self.calandar_picker(driver, dir='left')
+        self.find_picker(driver, date=start)
+        self.calandar_picker(driver, dir='right')
+        self.find_picker(driver, date=end)
+        driver.find_element(By.XPATH, self.confirm_btn).click()
