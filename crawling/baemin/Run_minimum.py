@@ -60,7 +60,7 @@ def scrapeBM_min_path(headless:bool):
             result_sales = data.result_process(result_sales, scraped_error)
             save.save_data(result_sales,app='baemin',kind='sales',period='day')
             driver.quit()
-            driver = Driver.driver_run(healdless=False)
+            driver = Driver.driver_run(headless=False)
             driver.get(URL)
     
     result_sales = save.set_index(result_sales)

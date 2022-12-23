@@ -32,7 +32,7 @@
    <enum>QTabWidget::Rounded</enum>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="run_btn">
     <property name="geometry">
      <rect>
       <x>30</x>
@@ -45,7 +45,7 @@
      <string>RUN</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="stop_btn">
     <property name="geometry">
      <rect>
       <x>110</x>
@@ -109,7 +109,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QComboBox" name="comboBox">
+   <widget class="QComboBox" name="scrape_comboBox">
     <property name="geometry">
      <rect>
       <x>60</x>
@@ -161,7 +161,6 @@
      <font>
       <family>함초롬돋움</family>
       <pointsize>11</pointsize>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -182,7 +181,6 @@
      <font>
       <family>함초롬돋움</family>
       <pointsize>12</pointsize>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -212,7 +210,7 @@
      <enum>QProgressBar::TopToBottom</enum>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton">
+   <widget class="QRadioButton" name="browser_off">
     <property name="geometry">
      <rect>
       <x>140</x>
@@ -231,7 +229,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_2">
+   <widget class="QRadioButton" name="browser_on">
     <property name="geometry">
      <rect>
       <x>80</x>
@@ -257,7 +255,6 @@
      <font>
       <family>함초롬돋움</family>
       <pointsize>11</pointsize>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -278,7 +275,6 @@
      <font>
       <family>함초롬돋움</family>
       <pointsize>10</pointsize>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -286,7 +282,7 @@
      <string>브라우저</string>
     </property>
    </widget>
-   <widget class="QComboBox" name="comboBox_2">
+   <widget class="QComboBox" name="list_option_comboBox">
     <property name="geometry">
      <rect>
       <x>60</x>
@@ -333,7 +329,6 @@
      <font>
       <family>함초롬돋움</family>
       <pointsize>11</pointsize>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>

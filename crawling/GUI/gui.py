@@ -1,73 +1,83 @@
 ### Setup Modules ###
-import sys
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
-from PyQt5.QtCore import QCoreApplication
-from PyQt5 import uic
+import os, sys
+sys.path.append(r'./crawling')
+
+import pyautogui
+from PySide6.QtUiTools import QUiLoader
+from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtCore import QFile, QIODevice
+from PySide6 import QtCore, QtWidgets, QtGui
+
+from baemin.Run_minimum import scrapeBM_min_path
+from GUI.design import Ui_MainWindow
 
 
-# label = QLabel("Hello")
-# label.show()
 
-# button = QPushButton('Hello, world!')
-# button.show()
-
-
-form_class = uic.loadUiType("design.ui")[0]  # An object to connect UI file with python file
-
-
-class MyWindow(QMainWindow, form_class):
-    
-    def __init__(self):
-        super().__init__(self)
+class MainWindow(QMainWindow, Ui_MainWindow):
+    def __init__(self, *args, obj=None, **kwargs):
+        super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
-        self.setGeometry(800, 250, 250, 350)
-        self.setWindowTitle("Frankraft")
-        self.setWindowIcon(QIcon(r'C:\Users\SEC\Coding\VScode\crawling\GUI\img\bike_red.png'))
-    
-    def menubar(self):
-        menu_open = self.menuBar().addMenu("&File")
+        self.run_btn.clicked.connect(self.click_run)
+        self.stop_btn.clicked.connect(self.click_stop)
+        self.progressBar.setValue(0)
+        self.dateStart.connect()
+
         
-        exit_action = QAction(QMenuBar(self))
-        exit_action.triggered.connect(self.click)
     
-    def click(self):
-        print('sucess')
+    
+    def click_run(self):
+        import time
+        for x in range(101):
+            self.progressBar.setValue(x)
+            time.sleep(0.1)
+            
+    def click_stop(self):
+        terminal_command = "exit()"
+        os.system(terminal_command)
+    
+    
+    def show_browser(self):
+        if self.radioButton.clicked():
+            return True
+        elif self.radioButton_2.clicked():
+            return False
+    
+    
+    def run_program(self):
+        headless = self.show_browser()
+        if headless != None:
+            self.pushButton.clicked.connected(scrapeBM_min_path(headless))
         
-
-    
-    
-    
-
-
-    
-    #self.comboBox.currentTextChanged.connect(self.showTable)
-    
-    
-    
-    #def showTable(self):
-     
-    
-    # def showResult(self):
-                
-    #     df_store = pd.read_excel(r'C:\Users\SEC\Coding\VScode\crawling\result\baemin_review_20221117.xlsx')
-    #     self.tableWidget.setRowCount(df_store.shape[0])
-    #     self.tableWidget.setColumnCount(9)
         
-    #     for i in range(len(df_store)):
-    #         for j in range(0, 9):
-    #             self.tableWidget.setItem(i, j, QTableWidgetItem(df_store.iloc[i][j]))
-                
-                
-    # def showProgress(self, store_index):
-    #     return self.progressBar.setValue(store_index)
-    
-        
+    def progress_status(self):
+        self.progressBar.setValue(100)
 
-def gui_main():
-    app = QApplication(sys.argv)
-    window = MyWindow()
-    window.show()
-    app.exec_()
 
-gui_main()
+app = QApplication(sys.argv)
+window = MainWindow()
+window.show()
+app.exec_()
+
+
+
+############################################################################################
+# ui 파일을 직접 사용할 때 사용하는 코드
+#
+# if __name__ == "__main__":
+#     app = QApplication(sys.argv)
+#
+#     ui_file_name = r".\crawling\GUI\design.ui"
+#     ui_file = QFile(ui_file_name)
+#     if not ui_file.open(QIODevice.ReadOnly):
+#         print(f"Cannot open {ui_file_name}: {ui_file.errorString()}")
+#         sys.exit(-1)
+#     loader = QUiLoader()
+#     window = loader.load(ui_file)
+#     ui_file.close()
+#     if not window:
+#         print(loader.errorString())
+#         sys.exit(-1)
+#     window.show()
+#
+#     sys.exit(app.exec())
+############################################################################################
